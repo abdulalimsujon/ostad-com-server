@@ -9,6 +9,8 @@ exports.create = async (req, res) => {
         const { name, description, price, category, quantity, shipping } = req.fields;
         const { photo } = req.files;
 
+        console.log(name)
+
         switch (true) {
             case !name?.trim():
                 return res.json({ error: "name is required" })

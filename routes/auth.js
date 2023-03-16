@@ -7,17 +7,17 @@ const router = express.Router();
 
 
 router.post("/register", register)
-router.get("/login", login)
+router.post("/login", login)
 router.get("/auth-check", requireSignIn, (req, res) => {
-    res.json({
-        status: true
+    res.status(200).json({
+        ok: true
     })
 
 
 })
 router.get('/isAdmin', requireSignIn, isAdmin, (req, res) => {
-    res.status({
-        status: "true"
+    res.status(200).json({
+        ok: true
     })
 })
 

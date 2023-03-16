@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { comparePassword, hashPassword } = require("../helpers/auth");
-const { findById, findByIdAndUpdate } = require("../models/user");
+
+
 const User = require("../models/user");
 
 
@@ -11,7 +12,7 @@ exports.register = async (req, res) => {
 
         const { name, email, password, role } = req.body;
 
-        if (!name.trim()) {
+        if (!name) {
             return res.json({ error: 'name is required' })
         }
 
@@ -24,6 +25,7 @@ exports.register = async (req, res) => {
         }
 
         const existUser = await User.findOne({ email: email })
+        console.log(existUser);
         if (existUser) {
             res.json({ error: "Email is taken" })
         }
@@ -75,6 +77,8 @@ exports.login = async (req, res) => {
     try {
         const { email, password, role } = req.body;
 
+        console.log(email, password);
+
 
         if (!email) {
             return res.json({ error: "email is required" })
@@ -84,14 +88,21 @@ exports.login = async (req, res) => {
             return res.json({ error: 'password must be 6 characters' })
         }
 
-        const user = await User.findOne({ email: email })
+        const user = await User.findOne({ email })
+
+        console.log("====>", user);
 
 
-        const match = await comparePassword(password, user.password)
 
-        if (!match) {
-            res.json({ error: "wrong email or password" })
-        }
+
+
+        // const match = await comparePassword(password, user.password)
+
+        // console.log(user.password)
+
+        // if (!match) {
+        //     res.json({ error: "wrong email or password" })
+        // }
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRATE, {
             expiresIn: "7d",
         });
@@ -100,11 +111,11 @@ exports.login = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                address: user.adress
+                address: user.address,
             },
-            token
+            token,
+        });
 
-        })
 
 
 
